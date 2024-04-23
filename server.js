@@ -5,6 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const mongoose = require('mongoose');
+require('dotenv').config()
 
 const port = process.env.PORT || 3000;
 
@@ -14,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 //Koppla till MongoDb
-mongoose.connect("mongodb+srv://haninfarhan96:databas2024.@dt207g.3u6adzt.mongodb.net/webbshopTest").then(() => {
+mongoose.connect(process.env.MONGODB_URl).then(() => {
     console.log("Connected to MongoDb")
 }).catch((error) => {
     console.log("Connection to database failed:" + error);
@@ -22,13 +23,17 @@ mongoose.connect("mongodb+srv://haninfarhan96:databas2024.@dt207g.3u6adzt.mongod
 
 //Schema
 const cvSchema = new mongoose.Schema({
-    name: {
+    job_title: {
         type: String,
-        required: [true, "Du måste lägga till namn"]
+        required: [true, "Du måste lägga till Jobb titel"]
     },
-    price: {
-        type: Number,
-        required: [true, "Du måste lägga till pris"]
+    company_name: {
+        type: String,
+        required: [true, "Du måste lägga till Företag"]
+    },
+    location: {
+        type: String,
+        required: [true, "Du måste lägga till Ort"]
     },
     description: {
         type: String,
@@ -37,7 +42,7 @@ const cvSchema = new mongoose.Schema({
 
 });
 
-const product = mongoose.model("clothes", cvSchema);
+const cv = mongoose.model("cv", cvSchema);
 
 
 
@@ -52,9 +57,9 @@ app.get("/api", async (req, res) => {
 
 /*...............................................Routing API....................................................*/
 
-app.get("/clothes", async (req, res) => {
+app.get("/cv", async (req, res) => {
     try {
-        let result = await product.find({}, {category: 0});
+        let result = await cv.find({}, {cv_id: 0});
 
         return res.json(result);
 
@@ -63,9 +68,9 @@ app.get("/clothes", async (req, res) => {
     }
 })
 
-app.post("/clothes", async (req, res) => {
+app.post("/cv", async (req, res) => {
     try {
-        let result = await product.create(req.body);
+        let result = await cv.create(req.body);
 
         return res.json(result);
 
