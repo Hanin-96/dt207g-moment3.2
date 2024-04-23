@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGODB_URl).then(() => {
     console.log("Connected to MongoDb")
 }).catch((error) => {
     console.log("Connection to database failed:" + error);
-})
+});
 
 //Schema
 const cvSchema = new mongoose.Schema({
@@ -57,17 +57,39 @@ app.get("/api", async (req, res) => {
 
 /*...............................................Routing API....................................................*/
 
+//Get - Hämta alla cv i databasen
 app.get("/cv", async (req, res) => {
     try {
-        let result = await cv.find({}, {cv_id: 0});
+        let result = await cv.find({});
 
         return res.json(result);
 
     } catch (error) {
         return res.status(500).json(error);
     }
-})
+});
 
+//Get - Hämtar specifikt cv i databasen
+app.get("/cv/:cvId", async (req, res) => {
+
+    let cvId = req.params.cvId
+
+    try {
+        let result = await cv.findOne({ _id: cvId });
+
+        if (result) {
+            return res.json(result);
+        } else {
+            return res.status(404).json({ message: "CV finns inte i databasen" });
+        }
+
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+});
+
+
+//Post - Lägga till cv i databasen
 app.post("/cv", async (req, res) => {
     try {
         let result = await cv.create(req.body);
@@ -77,4 +99,23 @@ app.post("/cv", async (req, res) => {
     } catch (error) {
         return res.status(400).json(error);
     }
-})
+});
+
+//Delete - Ta bort cv från databasen
+app.delete("/cv/:cvId", async (req, res) => {
+    let cvId = req.params.cvId;
+
+    try {
+        const result = await cv.deleteOne({ _id: cvId });
+
+        if (result.deletedCount > 0) {
+            return res.json({ message: "CV är borttagen" });
+        } else {
+            return res.status(404).json({ message: "CV finns inte i databasen" })
+        }
+
+    } catch (error) {
+        return res.status(500).json({ error: "Något gick fel" + error });
+    }
+});
+
