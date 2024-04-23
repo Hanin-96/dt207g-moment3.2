@@ -72,9 +72,10 @@ app.get("/cv", async (req, res) => {
 //Get - Hämtar specifikt cv i databasen
 app.get("/cv/:cvId", async (req, res) => {
 
-    let cvId = req.params.cvId
+    let cvId = req.params.cvId;
 
     try {
+        //Hitta specifik cv utifrån id
         let result = await cv.findOne({ _id: cvId });
 
         if (result) {
@@ -119,3 +120,40 @@ app.delete("/cv/:cvId", async (req, res) => {
     }
 });
 
+//Update - Uppdatera cv från databasen
+app.put("/cv/:cvId", async (req, res) => {
+
+    try {
+        let cvId = req.params.cvId;
+
+        //Deklarerar nya variabler
+        const jobTitle = req.body.job_title;
+        const companyName = req.body.company_name;
+        const location = req.body.location;
+        const description = req.body.description;
+
+        if (jobTitle && companyName && location && description && cvId) {
+
+            //Skickar in nytt objekt med nya värden som ersätter gamla
+            const updateFields = {
+                job_title: jobTitle,
+                company_name: companyName,
+                location: location,
+                description: description
+            };
+
+            //Uppdaterar specifik cv utifrån id och lägger in det nya objekt
+            let result = await cv.updateOne({ _id: cvId }, { $set: updateFields });
+
+            console.log(result, updateFields);
+            return res.json(result);
+
+
+        } else {
+            return res.status(404).json({ message: "CV finns inte i databasen" });
+        }
+
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+});
