@@ -4,7 +4,7 @@ Detta repository innehåller kod för ett enklare REST API byggt med Express. AP
 En liveversion av APIet finns tillgänglig på följande URL: https://dt207g-moment3-2-data.onrender.com/cv
 
 ## Databas
-APIet använder NoSQL MongoDB och Mongose. Databasen innehåller följande struktur på data som skapas i ett schema i ramverket Mongoose:
+APIet använder NoSQL MongoDB och Mongose. Databasen innehåller följande struktur på data som skapas i ett schema i modulen Mongoose:
 
 ```
     job_title: {
