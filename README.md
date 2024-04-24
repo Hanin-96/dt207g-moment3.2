@@ -4,11 +4,26 @@ Detta repository innehåller kod för ett enklare REST API byggt med Express. AP
 En liveversion av APIet finns tillgänglig på följande URL: https://dt207g-moment3-2-data.onrender.com/cv
 
 ## Databas
-APIet använder NoSQL MongoDB. Databasen innehåller följande:
+APIet använder NoSQL MongoDB. Databasen innehåller följande Schema:
 
-| Collection | Schema                                                                                                                                     |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| cvs        | **_id** , **job_title** , **company_name** , **location** , **description** |
+```
+    job_title: {
+        type: String,
+        required: [true, "Du måste lägga till Jobb titel"]
+    },
+    company_name: {
+        type: String,
+        required: [true, "Du måste lägga till Företag"]
+    },
+    location: {
+        type: String,
+        required: [true, "Du måste lägga till Ort"]
+    },
+    description: {
+        type: String,
+        required: false
+    }
+```
 
 ## Användning av CRUD
 
